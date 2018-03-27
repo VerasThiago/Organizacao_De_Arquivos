@@ -16,9 +16,9 @@ void intro(){ // Escrever alguma coisa para introduzir
 
 bool open_all(vector<string> files){
 	fstream arquivo;
-	for(auto file : files){
-		arquivo.open(file);
-		if(!arquivo){
+	for(auto file : files){  // Walk through files vector	
+		arquivo.open(file); // Open file
+		if(!arquivo){ //Check if opened  the file
 			cout << "Failed to open " << file << endl;
 			return false;
 		}
@@ -28,13 +28,13 @@ bool open_all(vector<string> files){
 	return true;
 }
 
-vector<string> read(int n){
+vector<string> read(int n){ // Reading the n files name
 	vector<string> files;
 	string file;
 	for(int i = 1; i <= n; i++){
 		cout << "Input file " << i << " name: ";
 		cin >> file;
-		files.push_back(file + ".txt");
+		files.push_back(file + ".txt"); // Adding the .txt extension
 	}
 	return files;
 }
@@ -70,13 +70,15 @@ void menu(vector<string> files){
 	printf("2 - Word\n");
 	printf("3 - Char\n");
 	printf("Input option : ");
-	while(cin >> option){
+
+	while(cin >> option){ // Checking if the option it's correct
 		if(option < 1 or option > 3){
 			printf("Input option (1,2,3): ");
 			continue;
 		}
 		break;
 	}
+
 	switch(option){
 		case 1:
 			concatenate(files);
@@ -102,7 +104,4 @@ int main(){
 		menu(files);
 	else	
 		cout << "System finished" << endl;
-
-	
-
 }
