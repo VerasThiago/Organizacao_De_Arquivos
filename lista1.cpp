@@ -23,24 +23,31 @@ bool open_all(vector<string> files){
 			return false;
 		}
 		cout << "Abriu o " << file << endl;
-		arquivo << "Penis" << endl;
 		arquivo.close();
 	}
 	return true;
 }
 
-/*void concatenate(vector<string> files){
-    std::fstream fa = std::fstream(file1, std::ios::out | std::ios::app);
+void concatenate(vector<string> files){
+	string all,teste;
+	fstream arquivo;
+	for(auto file : files){
+		arquivo.open(file);
+		while(getline(arquivo,teste))cout << teste << endl;
+		arquivo.close();
+	}
+
+    /*std::fstream fa = std::fstream(file1, std::ios::out | std::ios::app);
     std::fstream fb = std::fstream(file2, std::ios::in)
 
     std::string line;
     while( std::getline(fb, line)){
         fa << line << "\n";
-    }
+    }*/
    
 
-    return "Concatenation successful.\n";
-}*/
+    cout << "Concatenation successful.\n";
+}
 
 int main(){
 	vector<string> files;
@@ -55,9 +62,11 @@ int main(){
 		cin >> file;
 		files.push_back(file + ".txt");
 	}
-	if(open_all(files)){
-		//concatenate(files);
-	}
-	//else
+	if(open_all(files))
+		concatenate(files);
+	else
+		cout << "Falha em abrir todos os arquivos" << endl;
+
+	
 
 }
