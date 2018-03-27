@@ -28,6 +28,17 @@ bool open_all(vector<string> files){
 	return true;
 }
 
+vector<string> read(int n){
+	vector<string> files;
+	string file;
+	for(int i = 1; i <= n; i++){
+		cout << "Input file " << i << " name: ";
+		cin >> file;
+		files.push_back(file + ".txt");
+	}
+	return files;
+}
+
 void concatenate(vector<string> files){
 	string line;
 	vector<string> all;
@@ -82,17 +93,11 @@ void menu(vector<string> files){
 
 int main(){
 	vector<string> files;
-	string file;
 	int n;
 	intro();
-
 	cout << "Digite a quantidade de arquivos que deseja concatenar: ";
 	cin >> n;
-	for(int i = 1; i <= n; i++){
-		cout << "Input file " << i << " name: ";
-		cin >> file;
-		files.push_back(file + ".txt");
-	}
+	files = read(n);
 	if(open_all(files))
 		menu(files);
 	else	
