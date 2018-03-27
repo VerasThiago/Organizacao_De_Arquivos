@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void menu(){ // Escrever alguma coisa para introduzir
+void intro(){ // Escrever alguma coisa para introduzir
 		printf("\n");
 
 
@@ -19,53 +19,60 @@ bool open_all(vector<string> files){
 	for(auto file : files){
 		arquivo.open(file);
 		if(!arquivo){
-			cout << "Falha no arquivo " << file << endl;
+			cout << "Failed to open " << file << endl;
 			return false;
 		}
-		cout << "Abriu o " << file << endl;
+		cout << "Opened " << file << " successfuly " << endl;
 		arquivo.close();
 	}
 	return true;
 }
 
 void concatenate(vector<string> files){
-	string all,teste;
+	string line;
+	vector<string> all;
 	fstream arquivo;
 	for(auto file : files){
 		arquivo.open(file);
-		while(getline(arquivo,teste))cout << teste << endl;
+		while(getline(arquivo,line))all.push_back(line);
 		arquivo.close();
 	}
+	arquivo.open("final.txt");
+	if(!arquivo){ // Check if file is open
+		cout << "Failed to open final.txt file... Creating a new one." << endl;
+		arquivo.clear();
+		arquivo.open("final.txt", ios::out); // create a file 
+   	}
+   	else{
+   		arquivo.close();
+   		arquivo.open("final.txt", ios::app); // reopen file to write in the final
+   	}
+	for(auto line : all) arquivo << line;
+    arquivo.close();
+	cout << "Concatenation successful.\n";
+}
 
-    /*std::fstream fa = std::fstream(file1, std::ios::out | std::ios::app);
-    std::fstream fb = std::fstream(file2, std::ios::in)
+void menu(){
 
-    std::string line;
-    while( std::getline(fb, line)){
-        fa << line << "\n";
-    }*/
-   
-
-    cout << "Concatenation successful.\n";
 }
 
 int main(){
 	vector<string> files;
 	string file;
 	int n;
-	menu();
+	intro();
 
-	cout << "Digite a quantidade de arquivos que deseja concatenar" << endl;
+	cout << "Digite a quantidade de arquivos que deseja concatenar: ";
 	cin >> n;
 	for(int i = 1; i <= n; i++){
-		cout << "Digite o nome do arquivo " << i << ":";
+		cout << "Input file " << i << " name: ";
 		cin >> file;
 		files.push_back(file + ".txt");
 	}
 	if(open_all(files))
 		concatenate(files);
 	else
-		cout << "Falha em abrir todos os arquivos" << endl;
+		cout << "Failed to open all files" << endl;
 
 	
 
