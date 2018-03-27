@@ -63,36 +63,6 @@ void concatenate(vector<string> files){
 	cout << "Concatenation successful.\n";
 }
 
-void menu(vector<string> files){
-	int option;
-	printf("Concatenate files by:\n");
-	printf("1 - Line\n");
-	printf("2 - Word\n");
-	printf("3 - Char\n");
-	printf("Input option : ");
-
-	while(cin >> option){ // Checking if the option it's correct
-		if(option < 1 or option > 3){
-			printf("Input option (1,2,3): ");
-			continue;
-		}
-		break;
-	}
-
-	switch(option){
-		case 1:
-			concatenate(files);
-			break;
-		case 2:
-			printf("Word concatenation not done yet\n");
-			break;
-		case 3:
-			printf("Char concatenation not done yet\n");
-			break;
-	}
-	return;
-}
-
 int main(){
 	vector<string> files;
 	int n;
@@ -101,7 +71,7 @@ int main(){
 	cin >> n;
 	files = read(n);
 	if(open_all(files))
-		menu(files);
+		concatenate(files);
 	else	
 		cout << "System finished" << endl;
 }
