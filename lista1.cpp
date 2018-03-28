@@ -10,6 +10,13 @@ using namespace std;
 
 void intro(){ // Escrever alguma coisa para introduzir
 		printf("\n");
+		printf("Aluno: Thiago Veras Machado\n");
+		printf("M: 16/0146682\n");
+		printf("Aluno: Gabriel Cunha Bessa Vieira\n");
+		printf("M: 16/0120811\n");
+
+
+		printf("\n");
 		printf("Welcome to Veras Concatenator\n");
 		printf("You first name the amount of files that you want to concatenate\n");
 		printf("After that name 2 existing files without the extension '.txt'\n");
