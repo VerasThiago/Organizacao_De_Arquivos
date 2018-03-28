@@ -13,8 +13,8 @@
 using namespace std;
 
 void intro(){
-		printf("\n");
-		printf(CYAN "#####################################\n");
+		printf(CYAN"\n");
+		printf("#####################################\n");
 		printf("#                                   #\n");
 		printf("#        FILE CONCATENATOR          #\n");
 		printf("#                                   #\n");
@@ -32,21 +32,29 @@ void intro(){
 
 // Check if all files exists and can be opened
 bool open_all(vector<string> files){
+	// Return if all files could be opened
+	bool ans = true;
+
 	fstream arquivo;
+	
 	// Walk through files vector to get file name
 	for(auto file : files){
 	  	// Open file
 		arquivo.open(file); 
 		//Check if opened  the file
+
+		cout << "Opening " << file << " : ";
 		if(!arquivo){ 
-			cout << RED << "Failed to open " << file << RESET << endl;
-			return false;
+			cout << RED << "FAILED" << RESET << endl;
+			ans = false;
 		}
-		cout << "Opened " << file << GREEN << " successfuly " << RESET << endl;
-		// Close file if was opened
-		arquivo.close();
+		else{
+			cout << GREEN << "SUCCESS" << RESET << endl;
+			// Close file if was opened
+			arquivo.close();
+		}
 	}
-	return true;
+	return ans;
 }
 
 // Reading the n files names
@@ -120,7 +128,7 @@ void concatenate(vector<string> files){
 	// Close file	
     arquivo.close();
 
-	// Succes message
+	// Success message
 	cout << GREEN << "Concatenation successful.\n" << RESET;
 }
 
@@ -145,5 +153,5 @@ int main(){
 	if(open_all(files))
 		concatenate(files);
 	else
-		cout << "System finished" << endl;
+		cout << "Filed to open all files" << "System finished" << endl;
 }
