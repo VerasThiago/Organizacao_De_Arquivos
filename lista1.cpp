@@ -153,5 +153,5 @@ int main(){
 	if(open_all(files))
 		concatenate(files);
 	else
-		cout << "Filed to open all files" << "System finished" << endl;
+		cout << "Opening all files status : " << RED << "FAILED" << RESET << endl <<  "System finished" << endl;
 }
