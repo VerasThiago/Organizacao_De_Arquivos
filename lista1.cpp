@@ -10,13 +10,15 @@ using namespace std;
 
 void intro(){ // Escrever alguma coisa para introduzir
 		printf("\n");
-
-
+		printf("Welcome to Veras Concatenator\n");
+		printf("You first name the amount of files that you want to concatenate\n");
+		printf("After that name 2 existing files without the extension '.txt'\n");
+		printf("Should be able to concatenate 'n' amount of files successfully\n\n");
 }
 
 bool open_all(vector<string> files){
 	fstream arquivo;
-	for(auto file : files){  // Walk through files vector	
+	for(auto file : files){  // Walk through files vector
 		arquivo.open(file); // Open file
 		if(!arquivo){ //Check if opened  the file
 			cout << "Failed to open " << file << endl;
@@ -52,7 +54,7 @@ void concatenate(vector<string> files){
 	if(!arquivo){ // Check if file is open
 		cout << "Failed to open final.txt file... Creating a new one." << endl;
 		arquivo.clear();
-		arquivo.open("final.txt", ios::out); // create a file 
+		arquivo.open("final.txt", ios::out); // create a file
    	}
    	else{
    		arquivo.close();
@@ -72,6 +74,6 @@ int main(){
 	files = read(n);
 	if(open_all(files))
 		concatenate(files);
-	else	
+	else
 		cout << "System finished" << endl;
 }
