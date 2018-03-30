@@ -1,18 +1,20 @@
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include <regex>
-#include <string>
-#include <map>
+#include <stdio.h>   // Use function Prinf()
+#include <iostream>  // Use cin and cout functions
+#include <fstream>   // Use open() and all files functions
+#include <regex>     // Use vector class
+#include <string>    // Use String to read files name
 
-#define RED     "\x1b[31m"
+// Use collors on printf
+#define RED     "\x1b[31m"  
 #define GREEN   "\x1b[32m"
 #define CYAN    "\x1b[36m"
 #define RESET   "\x1b[0m"
 
+// Used to omit ::std syntax
 using namespace std;
 
-void intro(){
+// Print menu on terminal
+void intro(){ 
 		printf(CYAN"\n");
 		printf("#####################################\n");
 		printf("#                                   #\n");
@@ -41,9 +43,8 @@ bool open_all(vector<string> files){
 	for(auto file : files){
 	  	// Open file
 		arquivo.open(file); 
-		//Check if opened  the file
-
 		cout << "Opening " << file << " : ";
+		//Check if opened the file
 		if(!arquivo){ 
 			cout << RED << "FAILED" << RESET << endl;
 			ans = false;
