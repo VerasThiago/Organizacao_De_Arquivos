@@ -3,6 +3,7 @@
 ## Lista 2:
 
 1. Fator de Blocagem:
+
 - Descubra qual o tamanho da cluster do seu HD
 - Faça um programa que gere cinco arquivos contendo os mesmos dados, cada um com
 um fator de blocagem correspondente aos valores abaixo:
@@ -15,11 +16,11 @@ o espaço necessário para armazenar 10000 registros de tamanho de 150 bytes.
 
 
 3. Segundo a visão do projetista de arquivo, determine
-	a. O fator do bloco, com perdas mínimas, para armazenar registros de 128 bytes, em
+-	a. O fator do bloco, com perdas mínimas, para armazenar registros de 128 bytes, em
 setores de 512 bytes, cujo bloco não pode ser superior ao cluster de 1536 bytes. Cada
 Página é igual a 4 blocos.
-	b. Faça a mesma coisa com registros de 125 bytes.
-	c. Qual é a fragmentação interna no caso 3a e no caso 3b?
+-	b. Faça a mesma coisa com registros de 125 bytes.
+-	c. Qual é a fragmentação interna no caso 3a e no caso 3b?
 
 
 4. Qual a vantagem de um arquivo em disco armazenado
