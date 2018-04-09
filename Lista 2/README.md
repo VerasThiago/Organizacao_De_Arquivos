@@ -24,8 +24,8 @@ Página é igual a 4 blocos.
 
 
 4. Qual a vantagem de um arquivo em disco armazenado
-	a. numa única extensão?
-	b. várias extensões distintas?
+-	a) numa única extensão?
+-	b) várias extensões distintas?
 
 5. Quais são as vantagens e desvantagens da organização de trilhas em setores com
 grande capacidade.
