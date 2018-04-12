@@ -15,7 +15,6 @@ using namespace std;
 
 vector<string> message = {"Nome: ", "Sobrenome: ", "Endereço: ", "CEP: ", "Telefone: "}, data(5);
 
-
 // Print menu on terminal
 void intro(){ 
 		printf(CYAN"\n");
@@ -33,46 +32,39 @@ void intro(){
 		printf("#####################################\n");
 		printf("\n" RESET);
 }
-
-
 void save_by_fixed_size(){
-
-	
 	fstream arquivo;
-	arquivo.open("fixed_size.txt");
-	if(arquivo)remove("fixed_size.txt");
-	arquivo.close();
-	arquivo.open("fixed_size.txt", ios::app);
+	arquivo.open("fixed_size.txt", ios::app | ios::out);
 	for(int i = 0; i < 5; i++){
 		for(int j = 0; j < 20; j++){
 			if(j >= data[i].size()) arquivo << '-';
 			else arquivo << data[i][j];
 		}
 	}
-
-
+	arquivo << '\n'; 
+	arquivo.close();
 }
-
 void save_by_begin_size(){
 	fstream arquivo;
-	arquivo.open("begin_size.txt");
-	if(arquivo)remove("begin_size.txt");
-	arquivo.close();
-	arquivo.open("begin_size.txt", ios::app);
+	arquivo.open("begin_size.txt", ios::app | ios::out);
 	for(int i = 0; i < data.size(); i++) arquivo << data[i].size() << data[i];
-
+	arquivo << '\n'; 
+	arquivo.close();
 }
-
 void save_by_separator(){
 	fstream arquivo;
-	arquivo.open("separator.txt");
-	if(arquivo)remove("separator.txt");
-	arquivo.close();
-	arquivo.open("separator.txt", ios::app);
+	arquivo.open("separator.txt", ios::app | ios::out);
 	for(int i = 0; i < data.size(); i++) arquivo <<  data[i] << '%';
-
+	arquivo << '\n'; 
+	arquivo.close();
 }
-
+void save_by_valor(){
+	fstream arquivo;
+	arquivo.open("valor.txt", ios::app | ios::out);
+	for(int i = 0; i < data.size(); i++) arquivo << message[i] << data[i] << "|";
+	arquivo << '\n'; 
+	arquivo.close();
+}
 int main() {
 
 	// Display intro message
@@ -82,15 +74,11 @@ int main() {
     	cout << message[i];
     	getline(cin,data[i]);
     }
-
     save_by_fixed_size();
 
     save_by_begin_size();
 
     save_by_separator();
 
-    //save_by_valor();
-
-
-
+    save_by_valor();
 }
