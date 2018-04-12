@@ -34,14 +34,9 @@ grande capacidade.
 
 1 - Baixar esta pasta
 
-<<<<<<< HEAD
 2 - Abrir terminal e se direcionar até o diretório da pasta Lista 1
 
 3 - Digitar ./lista2
 
 [Relatório](Report.pdf)
 [Código](1b.cpp)
-=======
-[Relatório](relatorio.pdf)
-[Código]()
->>>>>>> a3c06b029a92f4c740831900a4114e97d17c9d83
