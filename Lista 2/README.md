@@ -32,7 +32,11 @@ grande capacidade.
 
 ### Tutorial:
 
-1 - Calma ae
+1 - Baixar esta pasta
 
-[Relatório]()
-[Código]()
+2 - Abrir terminal e se direcionar até o diretório da pasta Lista 1
+
+3 - Digitar ./lista2
+
+[Relatório](Report.pdf)
+[Código](1b.cpp)
