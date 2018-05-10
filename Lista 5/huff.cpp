@@ -1,6 +1,14 @@
 // C++ program for Huffman Coding
 #include <bits/stdc++.h>
+#include <bitset>
+
 using namespace std;
+
+// Open File
+ifstream file("sample.txt");
+
+
+map<char,string> table;
  
 // A Huffman tree node
 struct MinHeapNode {
@@ -37,8 +45,10 @@ void printCodes(struct MinHeapNode* root, string str){
     if (!root)
         return;
  
-    if (root->data != '$')
+    if (root->data != '$'){
         cout << root->data << " : " << str << "\n";
+        table[root->data] = str;
+    }
  
     printCodes(root->left, str + "0");
     printCodes(root->right, str + "1");
@@ -46,7 +56,7 @@ void printCodes(struct MinHeapNode* root, string str){
  
 // The main function that builds a Huffman Tree and
 // print codes by traversing the built Huffman Tree
-void HuffmanCodes(vector<char> data, vector<int> freq, int size){
+void HuffmanCodes(vector<char> data, vector<int> freq, int size ){
     struct MinHeapNode *left, *right, *top;
  
     // Create a min heap & inserts all characters of data[]
@@ -83,13 +93,12 @@ void HuffmanCodes(vector<char> data, vector<int> freq, int size){
  
     // Print Huffman codes using
     // the Huffman tree built above
+
+
     printCodes(minHeap.top(), "");
 }
 void create(vector<char> *carcteres, vector<int> *freq, int *n){
 
-    // Open File
-    ifstream file("sample.txt");
-    
     // String to read file
     string s;
 
@@ -97,7 +106,7 @@ void create(vector<char> *carcteres, vector<int> *freq, int *n){
     map<char,int> mp;
 
     // Walk through file and walk through chars
-    while(file >> s)
+    while(getline(file,s))
         for(auto x: s)
             mp[x]++;
 
@@ -109,11 +118,41 @@ void create(vector<char> *carcteres, vector<int> *freq, int *n){
 
     // Set carcteres size
     *n = mp.size();
+
+}
+
+void encode(){
+	file.close();
+	file.open("sample.txt");
+	ofstream saida("codigo.txt");
+	string line;
+	string total = "";
+	while(getline(file,line)){
+		cout << "linha = " << line << endl;
+		for(auto x: line){
+			total += table[x];
+		}
+	}
+	string aux = "";
+	for(int i = 0; i < total.size(); i++){
+		aux += total[i];
+		if(i + 1 % 8 == 0){
+			bitset<8> y(std::string(aux));
+			auto x = (char)y.to_ulong();
+			saida << x;
+			aux = "";
+		}
+
+	}
+	file.close();
+	saida.close();
+
 }
  
 // Driver program to test above functions
 int main(){
 
+    
     // Vetors size
     int n;
 
@@ -123,12 +162,17 @@ int main(){
     // Frequency of each char
     vector<int> freq;
 
+
     // Create vector with chars and each frequency
     create(&carcteres,&freq,&n);
 
-    // Compress all data
+   	// Compress all data
     HuffmanCodes(carcteres, freq, n);
  
+ 	encode();
+
+
+
+
     return 0;
 }
- 
