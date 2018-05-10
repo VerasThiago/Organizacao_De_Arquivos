@@ -5,9 +5,9 @@
 using namespace std;
 
 // Open File
-ifstream file("sample.txt");
+ifstream file;
 
-
+// Table created by tree
 map<char,string> table;
  
 // A Huffman tree node
@@ -122,37 +122,65 @@ void create(vector<char> *carcteres, vector<int> *freq, int *n){
 }
 
 void encode(){
+    // Close file to reopen at the top
 	file.close();
-	file.open("sample.txt");
-	ofstream saida("codigo.txt");
-	string line;
-	string total = "";
-	while(getline(file,line)){
-		cout << "linha = " << line << endl;
-		for(auto x: line){
-			total += table[x];
-		}
-	}
-	string aux = "";
+
+    // Open message code 
+	file.open("input.txt");
+
+    // Open output file compressed
+	ofstream saida("compressed.txt");
+
+    // Binary Code format
+    ofstream teste("binary.txt");
+
+    // Strings to read file and final result
+    string line, total, aux ;
+
+    // Walktrough file lines and create binary code with table
+    while(getline(file,line))
+        for(auto x: line)
+            total += table[x];
+        
+    //Write binary form
+    teste << total;
+
+    // Close binary form file
+    teste.close();
+
+    // Total binary form need to be multiple of 8
+    while((int)total.size()%8) total += "0";
+
+    // Walk through all bits
 	for(int i = 0; i < total.size(); i++){
+
+        // Add bit to string aux
 		aux += total[i];
-		if(i + 1 % 8 == 0){
-			bitset<8> y(std::string(aux));
-			auto x = (char)y.to_ulong();
-			saida << x;
-			aux = "";
-		}
 
+        // Work only with 8 bits number
+		if( aux.size() != 8) continue;
+
+        // Transform to binary
+		bitset<8> y(aux);
+
+        // Get respective char according to binary value and save on compressed file
+        saida << (char)y.to_ulong();
+
+        // Reset numer;        
+		aux.clear();
 	}
+
+    // Close message file
 	file.close();
+
+    // Close compressed file
 	saida.close();
-
 }
- 
-// Driver program to test above functions
-int main(){
 
-    
+void compress(){
+    // open message file
+    file.open("input.txt");
+
     // Vetors size
     int n;
 
@@ -162,17 +190,70 @@ int main(){
     // Frequency of each char
     vector<int> freq;
 
-
     // Create vector with chars and each frequency
     create(&carcteres,&freq,&n);
 
-   	// Compress all data
+    // Compress all data
     HuffmanCodes(carcteres, freq, n);
+    
+    // Create compressed file
+    encode();
+}
+
+void decompress(){
+    // open compressed file
+    ifstream compressed("compressed.txt");
+    
+    // Char to read byte to byte
+    char num;
+
+    // Final result
+    string total;
+
+    // Walktrough bytes
+    while(compressed >> num){
+        
+        // Get binary value from byte value
+        bitset<8> y(num);
+
+        // Add binary to the final string
+        total += y.to_string();
+    }
+
+    // Final result
+    ofstream retorno("rebinary.txt");
+
+    // Write the binary form
+    retorno << total;
+
+    // Close final result file in binary
+    retorno.close();
+
+    // Close compressed file
+    compressed.close();
+
+}
  
- 	encode();
 
+int main(){
+    
+    // Interaction with user
+    printf("1 - Compress file\n");
+    printf("2 - Read compressed file\n");
 
+    // Operation variable
+    int op;
 
+    // Read operation
+    cin >> op;
+
+    // Go to huffman compression
+    if(op == 1)
+        compress();
+
+    // Decompress
+    else if(op == 2)
+        decompress();
 
     return 0;
 }
