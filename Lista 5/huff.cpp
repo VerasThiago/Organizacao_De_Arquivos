@@ -9,6 +9,8 @@ ifstream file;
 
 // Table created by tree
 map<char,string> table;
+
+string makeTrie;
  
 // A Huffman tree node
 struct MinHeapNode {
@@ -28,6 +30,10 @@ struct MinHeapNode {
         this->data = data;
         this->freq = freq;
     }
+
+    bool isLeaf(){
+        return !left and !right;
+    }
 };
  
 // For comparison of
@@ -37,7 +43,6 @@ struct compare {
         return (l->freq > r->freq);
     }
 };
- 
 // Prints huffman codes from
 // the root of Huffman Tree.
 void printCodes(struct MinHeapNode* root, string str){
@@ -53,6 +58,22 @@ void printCodes(struct MinHeapNode* root, string str){
     printCodes(root->left, str + "0");
     printCodes(root->right, str + "1");
 }
+
+void preOrder(struct MinHeapNode* root){
+
+    if(root->isLeaf()){
+        makeTrie += "1";
+        bitset<8> y(root->data);
+        makeTrie += y.to_string();
+        return;
+    }
+    makeTrie += "0";
+    preOrder(root->left);
+    preOrder(root->right);
+
+
+}
+
  
 // The main function that builds a Huffman Tree and
 // print codes by traversing the built Huffman Tree
@@ -96,6 +117,9 @@ void HuffmanCodes(vector<char> data, vector<int> freq, int size ){
 
 
     printCodes(minHeap.top(), "");
+    preOrder(minHeap.top());
+    cout << "teste = " << makeTrie << endl;
+    
 }
 void create(vector<char> *carcteres, vector<int> *freq, int *n){
 
