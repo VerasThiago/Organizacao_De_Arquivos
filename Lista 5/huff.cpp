@@ -129,9 +129,11 @@ string binaryString2bits(string total){
         // Reset numer;        
         aux.clear();
     }
-    bitset<8> y(aux);
-    // Get respective char according to binary value and save on compressed file
-    ret += (char)y.to_ulong();
+    if(aux.size() == 8){
+        bitset<8> y(aux);
+        // Get respective char according to binary value and save on compressed file
+        ret += (char)y.to_ulong();
+    }
     return ret;
 }
 
@@ -151,6 +153,29 @@ string char2binaryString(string message){
 
 }
 
+string transform(vector<char> bytes){
+    string ret;
+    for(auto x : bytes){
+        bitset<8> y(x);
+        // Add binary to the final string
+        ret += y.to_string();
+    }
+    return ret;
+}
+
+
+string ReadAllBytes(string filename){
+    ifstream ifs(filename, ios::binary|ios::ate);
+    ifstream::pos_type pos = ifs.tellg();
+
+    vector<char>  result(pos);
+
+    ifs.seekg(0, ios::beg);
+    ifs.read(&result[0], pos);
+
+    return transform(result);
+}
+
 void createCompressedFile(){
 
     // Open message code 
@@ -168,18 +193,17 @@ void createCompressedFile(){
     while(getline(file,line)){
         for(auto x: line)
             total += table[x];
-        total += table['\n'];
     }
     // Adding char that represent EOF
     total += table[4];
-         
+
     total = trieCode + total;
 
     while(total.size()%8 != 0) total += "0";
 
     // Total binary form need to be multiple of 8
     string final = binaryString2bits(total);
-    
+
     // Adding compressed to file
     saida << final;
 
@@ -242,19 +266,11 @@ void decompress(){
     // Read filename
     cin >> filename;
 
-    // open compressed file
-    ifstream compressed(filename);
+    compressedMessage = ReadAllBytes(filename);
 
-    // Get compressed message
-    getline(compressed, compressedMessage);
-
-
+    
     // Idx to walk in compressedMessage
     int idx = 0;
-    
-
-    // Transform bits message in string message
-    compressedMessage = char2binaryString(compressedMessage);
      
     // Build trie with this binary string
     Trie = buildTrie(compressedMessage, &idx);
@@ -274,8 +290,6 @@ void decompress(){
     // Close file;
     out.close();
 
-    // Close compressed file
-    compressed.close();
 }
 
 

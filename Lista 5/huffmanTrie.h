@@ -110,7 +110,6 @@ char readChar(int idx, string trieCode){
     for(int i = idx; i < idx+8; i++)
         letter += trieCode[i];
     
-    
     // Transfor to bynary value
     bitset<8> y(letter);
 
