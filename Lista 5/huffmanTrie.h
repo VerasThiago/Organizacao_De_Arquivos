@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <bitset>
+#include <map>
+#include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -35,8 +39,10 @@ void printTrie(struct MinHeapNode* root, string str){
     if (!root)
         return;
     
-
+    // If root is leaf, so have a char
     if (root->isLeaf()){
+
+        // For in case char are \n, to improve visualization
         if(root->data == '\n')
             cout << "\\n" << " : " << str << "\n";
         else
@@ -44,7 +50,7 @@ void printTrie(struct MinHeapNode* root, string str){
 
     }
     
- 
+    // Pre order construction
     printTrie(root->left, str + "0");
     printTrie(root->right, str + "1");
 }
