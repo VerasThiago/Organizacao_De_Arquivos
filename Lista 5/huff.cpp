@@ -69,6 +69,8 @@ void create(vector<char> *carcteres, vector<int> *freq, int *n){
             mp[x]++;
         mp['\n']++;
     }
+
+    // Adding representation of EOF char
     mp[4] = 1;
         
     
@@ -88,23 +90,22 @@ void create(vector<char> *carcteres, vector<int> *freq, int *n){
 
 void printMsg(struct MinHeapNode* root, int idx){
     // Stop recursion if don't have more binary string to read
-    if(idx > compressedMessage.size())return;
-
     // If root is leaft then we achieved a char
     if(root->isLeaf()){
     	if(root->data == 4) return;
-
         uncompressedMessage += ((int)root->data == 13 ? '\n':root->data);
         printMsg(Trie, idx);
     }
     // If is not a root and is 1, so go right
-    else if(compressedMessage[idx] == '1')
+    else if(compressedMessage[idx] == '1'){
         printMsg(root->right, idx+1);
 
-    // Go left otherwise
-    else
-        printMsg(root->left, idx+1);
+    }
 
+    // Go left otherwise
+    else{
+        printMsg(root->left, idx+1);
+    }
 }
 
 string binaryString2bits(string total){
@@ -128,7 +129,9 @@ string binaryString2bits(string total){
         // Reset numer;        
         aux.clear();
     }
-
+    bitset<8> y(aux);
+    // Get respective char according to binary value and save on compressed file
+    ret += (char)y.to_ulong();
     return ret;
 }
 
@@ -136,7 +139,6 @@ string char2binaryString(string message){
 
     // string to return
     string ret;
-    
     for(int i = 0; i < message.size(); i++){        
         // Get binary value from byte value
         bitset<8> y(message[i]);
@@ -168,14 +170,16 @@ void createCompressedFile(){
             total += table[x];
         total += table['\n'];
     }
+    // Adding char that represent EOF
     total += table[4];
          
     total = trieCode + total;
-    
+
+    while(total.size()%8 != 0) total += "0";
+
     // Total binary form need to be multiple of 8
     string final = binaryString2bits(total);
-  
-
+    
     // Adding compressed to file
     saida << final;
 
@@ -244,15 +248,17 @@ void decompress(){
     // Get compressed message
     getline(compressed, compressedMessage);
 
+
     // Idx to walk in compressedMessage
     int idx = 0;
     
+
     // Transform bits message in string message
     compressedMessage = char2binaryString(compressedMessage);
-    
+     
     // Build trie with this binary string
     Trie = buildTrie(compressedMessage, &idx);
- 
+
     // Print trie
     printTrie(Trie, "");
 
