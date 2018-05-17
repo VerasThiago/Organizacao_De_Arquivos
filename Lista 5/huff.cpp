@@ -1,8 +1,3 @@
-#include <iostream>
-#include <bitset>
-#include <fstream>
-#include <queue> 
-
 #include "huffmanTrie.h"
 using namespace std;
 
