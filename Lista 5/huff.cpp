@@ -8,7 +8,7 @@ struct MinHeapNode* Trie;
 map<char,string> table;
 
 // Encoded trie and message
-string trieCode, compressedMessage;
+string trieCode, compressedMessage, uncompressedMessage;
 
 
 // Filename
@@ -63,9 +63,13 @@ void create(vector<char> *carcteres, vector<int> *freq, int *n){
     map<char,int> mp;
 
     // Walk through file and walk through chars
-    while(getline(file,s))
+    mp['\n'] = -1;
+    while(getline(file,s)){
         for(auto x: s)
             mp[x]++;
+        mp['\n']++;
+    }
+    mp[4] = 1;
         
     
     // Walk through map and set vector of char and freq.
@@ -84,11 +88,13 @@ void create(vector<char> *carcteres, vector<int> *freq, int *n){
 
 void printMsg(struct MinHeapNode* root, int idx){
     // Stop recursion if don't have more binary string to read
-    if(idx > compressedMessage.size()) {puts("");return;}
+    if(idx > compressedMessage.size())return;
 
     // If root is leaft then we achieved a char
     if(root->isLeaf()){
-        cout << ((int)root->data == 13 ? '\n':root->data);
+    	if(root->data == 4) return;
+
+        uncompressedMessage += ((int)root->data == 13 ? '\n':root->data);
         printMsg(Trie, idx);
     }
     // If is not a root and is 1, so go right
@@ -103,7 +109,6 @@ void printMsg(struct MinHeapNode* root, int idx){
 
 string binaryString2bits(string total){
     string ret, aux;
-    while((int)total.size()%8) total += "0";
 
     // Walk through all bits
     for(int i = 0; i < total.size(); i++){
@@ -146,33 +151,31 @@ string char2binaryString(string message){
 
 void createCompressedFile(){
 
-    printf("Input output compressed file name : ");
-    
-    string outFilename;
-
-    cin >> outFilename;
-
     // Open message code 
     ifstream file(filename);
 
     // Open output file compressed
-    ofstream saida(outFilename);
+    ofstream saida("compressed.txt");
 
     // Strings to read file and final result
     string line, total;
 
     // Adding Trie binary code to the beginnig o compressed file
-    total += trieCode;
 
     // Walktrough file lines and create binary code with table
-    while(getline(file,line))
+    while(getline(file,line)){
         for(auto x: line)
             total += table[x];
+        total += table['\n'];
+    }
+    total += table[4];
          
-
+    total = trieCode + total;
+    
     // Total binary form need to be multiple of 8
     string final = binaryString2bits(total);
-    
+  
+
     // Adding compressed to file
     saida << final;
 
@@ -185,8 +188,10 @@ void createCompressedFile(){
 
 void compress(){
 
+    // User interaction
     printf("Input file name to compress : ");
 
+    // Read filename
     cin >> filename;
 
     // open message file
@@ -227,8 +232,12 @@ void compress(){
 
 void decompress(){
 
+	// Interaction with user
     printf("Input file name that want to decompress : ");
+
+    // Read filename
     cin >> filename;
+
     // open compressed file
     ifstream compressed(filename);
 
@@ -250,9 +259,21 @@ void decompress(){
     // Print compressed message
     printMsg(Trie, idx);
 
+    // Open final result file
+    ofstream out("uncompressed.txt");
+
+    // Write message
+    out << uncompressedMessage;
+
+    // Close file;
+    out.close();
+
     // Close compressed file
     compressed.close();
 }
+
+
+
  
 
 int main(){
