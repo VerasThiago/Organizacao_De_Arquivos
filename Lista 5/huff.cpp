@@ -1,127 +1,62 @@
-// C++ program for Huffman Coding
 #include <bits/stdc++.h>
 #include <bitset>
-
+#include "huffmanTrie.h"
 using namespace std;
 
-// Open File
-ifstream file;
+// Main Huffman Trie
+struct MinHeapNode* Trie;
 
 // Table created by tree
 map<char,string> table;
 
-string makeTrie;
- 
-// A Huffman tree node
-struct MinHeapNode {
- 
-    // One of the input characters
-    char data;
- 
-    // Frequency of the character
-    unsigned freq;
- 
-    // Left and right child
-    MinHeapNode *left, *right;
- 
-    // Constructor
-    MinHeapNode(char data, unsigned freq){
-        left = right = NULL;
-        this->data = data;
-        this->freq = freq;
-    }
+// Encoded trie and message
+string trieCode, compressedMessage;
 
-    bool isLeaf(){
-        return !left and !right;
-    }
-};
+
+// Filename
+string filename;
  
-// For comparison of
-// two heap nodes (needed in min heap)
-struct compare {
-    bool operator()(MinHeapNode* l, MinHeapNode* r){
-        return (l->freq > r->freq);
-    }
-};
-// Prints huffman codes from
-// the root of Huffman Tree.
-void printCodes(struct MinHeapNode* root, string str){
- 
+// Create table of binary 
+void createTable(struct MinHeapNode* root, string str){
+    // Return if root is NULL
     if (!root)
         return;
- 
-    if (root->data != '$'){
-        cout << root->data << " : " << str << "\n";
+    
+    if (root->data != '\0')
         table[root->data] = str;
-    }
- 
-    printCodes(root->left, str + "0");
-    printCodes(root->right, str + "1");
+    
+    // Pre order construction
+    createTable(root->left, str + "0");
+    createTable(root->right, str + "1");
 }
 
-void preOrder(struct MinHeapNode* root){
+void encodeTrie(struct MinHeapNode* root){
 
     if(root->isLeaf()){
-        makeTrie += "1";
+        // Add bit 1 if root is leaf
+        trieCode += "1";
+
+        // Get in binary char value
         bitset<8> y(root->data);
-        makeTrie += y.to_string();
+
+        // Transfor binary value to string
+        trieCode += y.to_string();
+
         return;
     }
-    makeTrie += "0";
-    preOrder(root->left);
-    preOrder(root->right);
 
+    // Add bit 0 if root is not leaf
+    trieCode += "0";
+
+    // Pre order call
+    encodeTrie(root->left);
+    encodeTrie(root->right);
 
 }
 
- 
-// The main function that builds a Huffman Tree and
-// print codes by traversing the built Huffman Tree
-void HuffmanCodes(vector<char> data, vector<int> freq, int size ){
-    struct MinHeapNode *left, *right, *top;
- 
-    // Create a min heap & inserts all characters of data[]
-    priority_queue<MinHeapNode*, vector<MinHeapNode*>, compare> minHeap;
- 
-    for (int i = 0; i < size; ++i)
-        minHeap.push(new MinHeapNode(data[i], freq[i]));
- 
-    // Iterate while size of heap doesn't become 1
-    while (minHeap.size() != 1) {
- 
-        // Extract the two minimum
-        // freq items from min heap
-        left = minHeap.top();
-        minHeap.pop();
- 
-        right = minHeap.top();
-        minHeap.pop();
- 
-        // Create a new internal node with
-        // frequency equal to the sum of the
-        // two nodes frequencies. Make the
-        // two extracted node as left and right children
-        // of this new node. Add this node
-        // to the min heap '$' is a special value
-        // for internal nodes, not used
-        top = new MinHeapNode('$', left->freq + right->freq);
- 
-        top->left = left;
-        top->right = right;
- 
-        minHeap.push(top);
-    }
- 
-    // Print Huffman codes using
-    // the Huffman tree built above
-
-
-    printCodes(minHeap.top(), "");
-    preOrder(minHeap.top());
-    cout << "teste = " << makeTrie << endl;
-    
-}
+// Create frequency and set of chars used on file
 void create(vector<char> *carcteres, vector<int> *freq, int *n){
+    ifstream file(filename);
 
     // String to read file
     string s;
@@ -133,7 +68,8 @@ void create(vector<char> *carcteres, vector<int> *freq, int *n){
     while(getline(file,s))
         for(auto x: s)
             mp[x]++;
-
+        
+    
     // Walk through map and set vector of char and freq.
     for(auto x: mp){
         carcteres->push_back(x.first);
@@ -143,67 +79,120 @@ void create(vector<char> *carcteres, vector<int> *freq, int *n){
     // Set carcteres size
     *n = mp.size();
 
+    // close file
+    file.close();
+
 }
 
-void encode(){
-    // Close file to reopen at the top
-	file.close();
+void printMsg(struct MinHeapNode* root, int idx){
+    // Stop recursion if don't have more binary string to read
+    if(idx > compressedMessage.size()) {puts("");return;}
+
+    // If root is leaft then we achieved a char
+    if(root->isLeaf()){
+        cout << ((int)root->data == 13 ? '\n':root->data);
+        printMsg(Trie, idx);
+    }
+    // If is not a root and is 1, so go right
+    else if(compressedMessage[idx] == '1')
+        printMsg(root->right, idx+1);
+
+    // Go left otherwise
+    else
+        printMsg(root->left, idx+1);
+
+}
+
+string binaryString2bits(string total){
+    string ret, aux;
+    while((int)total.size()%8) total += "0";
+
+    // Walk through all bits
+    for(int i = 0; i < total.size(); i++){
+
+        // Add bit to string aux
+        aux += total[i];
+
+        // Work only with 8 bits number
+        if( aux.size() != 8) continue;
+
+        // Transform to binary
+        bitset<8> y(aux);
+
+        // Get respective char according to binary value and save on compressed file
+        ret += (char)y.to_ulong();
+
+        // Reset numer;        
+        aux.clear();
+    }
+
+    return ret;
+}
+
+string char2binaryString(string message){
+
+    // string to return
+    string ret;
+    
+    for(int i = 0; i < message.size(); i++){        
+        // Get binary value from byte value
+        bitset<8> y(message[i]);
+        // Add binary to the final string
+        ret += y.to_string();
+    }    
+
+    // Return binary string
+    return ret;
+
+}
+
+void createCompressedFile(){
+
+    printf("Input output compressed file name : ");
+    
+    string outFilename;
+
+    cin >> outFilename;
 
     // Open message code 
-	file.open("input.txt");
+    ifstream file(filename);
 
     // Open output file compressed
-	ofstream saida("compressed.txt");
-
-    // Binary Code format
-    ofstream teste("binary.txt");
+    ofstream saida(outFilename);
 
     // Strings to read file and final result
-    string line, total, aux ;
+    string line, total;
+
+    // Adding Trie binary code to the beginnig o compressed file
+    total += trieCode;
 
     // Walktrough file lines and create binary code with table
     while(getline(file,line))
         for(auto x: line)
             total += table[x];
-        
-    //Write binary form
-    teste << total;
-
-    // Close binary form file
-    teste.close();
+         
 
     // Total binary form need to be multiple of 8
-    while((int)total.size()%8) total += "0";
-
-    // Walk through all bits
-	for(int i = 0; i < total.size(); i++){
-
-        // Add bit to string aux
-		aux += total[i];
-
-        // Work only with 8 bits number
-		if( aux.size() != 8) continue;
-
-        // Transform to binary
-		bitset<8> y(aux);
-
-        // Get respective char according to binary value and save on compressed file
-        saida << (char)y.to_ulong();
-
-        // Reset numer;        
-		aux.clear();
-	}
+    string final = binaryString2bits(total);
+    
+    // Adding compressed to file
+    saida << final;
 
     // Close message file
-	file.close();
+    file.close();
 
     // Close compressed file
-	saida.close();
+    saida.close();
 }
 
 void compress(){
+
+    printf("Input file name to compress : ");
+
+    cin >> filename;
+
     // open message file
-    file.open("input.txt");
+    ifstream file(filename);
 
     // Vetors size
     int n;
@@ -217,45 +206,54 @@ void compress(){
     // Create vector with chars and each frequency
     create(&carcteres,&freq,&n);
 
+    struct MinHeapNode *left, *right;
     // Compress all data
-    HuffmanCodes(carcteres, freq, n);
+    Trie = HuffmanCodes(left, right, Trie, carcteres, freq, n);
     
+    // Create table of values for each char
+    createTable(Trie,"");
+
+    // Create trie binary code
+    encodeTrie(Trie);
+
+    // Print trie chars codes
+    printTrie(Trie, "");
+
     // Create compressed file
-    encode();
+    createCompressedFile();
+
+    // Closing file
+    file.close();
 }
 
+
 void decompress(){
+
+    printf("Input file name that want to decompress : ");
+    cin >> filename;
     // open compressed file
-    ifstream compressed("compressed.txt");
+    ifstream compressed(filename);
+
+    // Get compressed message
+    getline(compressed, compressedMessage);
+
+    // Idx to walk in compressedMessage
+    int idx = 0;
     
-    // Char to read byte to byte
-    char num;
+    // Transform bits message in string message
+    compressedMessage = char2binaryString(compressedMessage);
+    
+    // Build trie with this binary string
+    Trie = buildTrie(compressedMessage, &idx);
+ 
+    // Print trie
+    printTrie(Trie, "");
 
-    // Final result
-    string total;
-
-    // Walktrough bytes
-    while(compressed >> num){
-        
-        // Get binary value from byte value
-        bitset<8> y(num);
-
-        // Add binary to the final string
-        total += y.to_string();
-    }
-
-    // Final result
-    ofstream retorno("rebinary.txt");
-
-    // Write the binary form
-    retorno << total;
-
-    // Close final result file in binary
-    retorno.close();
+    // Print compressed message
+    printMsg(Trie, idx);
 
     // Close compressed file
     compressed.close();
-
 }
  
 
