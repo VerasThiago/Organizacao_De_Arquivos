@@ -437,15 +437,27 @@ void buscar(){
 
 }
 
-void teste(){
-	filebuf myfile;
-    //myfile.open ("input.txt", ios::in | ios::out);
-    if (!myfile.is_open()) cout << "cannot open" << endl;
-    myfile.sputn("VAI\n", 4);
-    myfile.close();
+// Verifica se o arquivo está vazio para preencher com a quantidade de registros e deslocamento em bytes
+void check(){
+
+	// Pega o final do arquivo de registros
+	arquivo.seekp(0,ios::end);
+
+	// Pega o final do arquivo de indicies
+	indice.seekp(0, ios::end);
+
+	// Se estiver vazio ele escreve o header
+	if(!arquivo.tellg())
+		arquivo << "0000000 0000016" << endl;
+	
+	// Se estiver vazio ele escreve o header
+	if(!indice.tellg())
+		indice << "0000000 0000016" << endl;
 }
 
 int main(){
+
+	check();
 
 	// Loop principal do programa
 	while(true){
