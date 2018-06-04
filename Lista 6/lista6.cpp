@@ -9,7 +9,7 @@
 using namespace std;
 
 // Vetor com as perguntas a serem feitas
-vector<string> questions = {"Nome", "Sobrenome", "RG", "CPF", "Endereco", "CEP", "Nacionalidade","Data de nascimento", "Pais de nascimento", "Transa?"};
+vector<string> questions = {"Nome", "Sobrenome", "RG", "CPF", "Endereco", "CEP", "Nacionalidade","Data de nascimento", "Pais de nascimento", "Deseja se alistar ?"};
 
 // Arquivo de registros
 fstream arquivo("input.txt", ios::in | ios::out);
@@ -61,11 +61,9 @@ void read(){
 	// Armazena o registo como id no arquivo
     arquivo << header << "|";
 
-    int x = 0;
-    
 	// Caminha pelas perguntas
     for(auto question : questions){
-    	if(x++ == 2) break;
+		
 		// Iteração com o usuário
         cout << "\t" << question << ": ";
 
@@ -224,6 +222,9 @@ char menu(){
 	
 	// Limpa a tela
 	system(CLEAR);
+
+	// Iteração com o usuário
+	intro();
 
 	// Display de opções
 	printf("0 - Sair\n");
@@ -462,6 +463,7 @@ int main(){
 	// Loop principal do programa
 	while(true){
 		
+
 		// Pega o opção com o usuário
 		char op = menu();
 

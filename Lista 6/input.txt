@@ -1,0 +1,4 @@
+0000003 0000308
+1|Thiago|Veras Machado|123456789|098765432|Universidade de Brasilia|730928472|Brasileira|25/11/1997|Brasil|Nao|
+2|Aldair Playboy|Silva|5301041|1024149|Morumbi|14218184|Brasileira|14/8/1987|Brasil|Sim|
+3|Joao|Kleber Pereira|1239451|12595915|Copacabana|38181484|Brasileira|24/5/1974|China|Sim|
