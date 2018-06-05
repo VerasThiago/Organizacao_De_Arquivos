@@ -8,6 +8,6 @@ Listas:
 
 [Lista 3](Lista%203)
 
-[Lista 4]
+Lista 4
 
 [Lista 5](Lista%205)
